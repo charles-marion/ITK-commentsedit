@@ -1,0 +1,57 @@
+body {
+	font-size: 12px;
+}
+
+.codeContainer {
+	width: 900px;
+}
+
+input{
+	width: 700px;
+}
+
+.action {
+	margin-top:13px;
+	top:3px;
+	left:10px;
+	line-height:1.5em;
+	float:left;
+	}
+
+.edit {
+	float:right;
+	display:block;
+	}
+	
+.editSpan
+	{
+	position: relative;
+	top:-15px;
+	left:-130px;
+	}
+.edit img {
+	height:16px;
+	width:16px;
+	cursor: pointer;
+	}
+	
+.warning{
+	display:none;
+	}
+.warning img{
+	height:50px;
+	width:50px;
+	}
+	
+.warningImg{
+	height:30px;
+	width:30px;
+	}
+	
+	#s3capcha div {
+    float: left;
+}
+
+.mainFormInput {
+	width: 300px;
+	}

@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors', E_ALL);
 if (!isset($_GET['file']))
   {
   echo "Please set a file path";
@@ -8,7 +9,7 @@ $path = $_GET['file'];
 include_once 'config.php';
 
 //captcha
-@session_start();
+session_start();
 $values     = array('apple','strawberry','lemon','cherry','pear'); // image names //   // array('house','folder','monitor','man','woman','lock','rss'); -> for general theme
 $imageExt   = 'jpg'; // image extensions //
 $imagePath  = 's3icons/fruit/'; // image path //  // images/general/ -> for general theme
@@ -22,6 +23,7 @@ for($i=0;$i<sizeof($values);$i++) {
     $s3Capcha .= '<div><span>'.$values[$i].' <input type="radio" name="s3capcha" value="'.$value2[$i].'"></span><div style="background: url('.$imagePath.$values[$i].'.'.$imageExt.') bottom left no-repeat; width:'.$imageW.'px; height:'.$imageH.'px;cursor:pointer;display:none;" class="img" /></div></div>'."\n";
 }
 $_SESSION['s3capcha'] = $value2[$rand];
+
 $s3Capcha;
 
 ?>
@@ -46,20 +48,9 @@ echo $LIBRAIRY_NAME.": ".basename($path);
   <body>
   
 
-  <center>
-    <a href="<?php echo $DOXYGEN_URL?>index.html" class="qindex">Main Page</a>&nbsp;&nbsp; 
-    <a href="<?php echo $DOXYGEN_URL?>modules.html" class="qindex">Groups</a>&nbsp;&nbsp;
-    <a href="<?php echo $DOXYGEN_URL?>namespaces.html" class="qindex">Namespace List</a>&nbsp;&nbsp;
-    
-    <a href="<?php echo $DOXYGEN_URL?>hierarchy.html" class="qindex">Class Hierarchy</a>&nbsp;&nbsp;
-    <a href="<?php echo $DOXYGEN_URL?>classes.html" class="qindex">Alphabetical List</a>&nbsp;&nbsp;
-    <a href="<?php echo $DOXYGEN_URL?>annotated.html" class="qindex">Compound List</a>&nbsp;&nbsp; 
-    <a href="<?php echo $DOXYGEN_URL?>files.html" class="qindex">File List</a>&nbsp;&nbsp; 
-    <a href="<?php echo $DOXYGEN_URL?>namespacemembers.html" class="qindex">Namespace Members</a>&nbsp;&nbsp;
-    <a href="<?php echo $DOXYGEN_URL?>functions.html" class="qindex">Compound Members</a>&nbsp;&nbsp; 
-    <a href="<?php echo $DOXYGEN_URL?>globals.html" class="qindex">File Members</a>&nbsp;&nbsp;
-    <a href="<?php echo $DOXYGEN_URL?>pages.html" class="qindex">Concepts</a>
-  </center>
+  <?php 
+  include 'header.php';
+  ?>
 
 <div class="contents"> 
 <br/>

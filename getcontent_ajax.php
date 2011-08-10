@@ -6,40 +6,18 @@ if (!isset($_GET['file']))
   }
 $file = $_GET['file'];
 include_once 'config.php';
-$found="";
-$foldersArray=explode(";",$FOLDERS);
-$i=0;
-if(!file_exists('tmp/tree/'.$foldersArray[0]))
+if(!file_exists($TMP_PATH."/tree/tree.txt"))
   {
-  include("gettree.php");
-  }
-while($found==""&&$i<count($foldersArray))
-  {
-  $content=file_get_contents('tmp/tree/'.$foldersArray[$i]);
-  if(strpos($content, $file)!==false)
-    {
-    $found=$foldersArray[$i];
-    break;
-    }
-  $i++;
-  }
-if($found=="")
-  {
-  echo "-2";
+  echo "-2";//Unable to find the source file. Please check if the file exists and try again.
   exit;
   }
-$content = file_get_contents($GITORIOUS_PATH.'/blobs/raw/master/Code/'.$found.'/'.$file);
-if ($content === false||$content=='')
+$json = file_get_contents($TMP_PATH."/tree/tree.txt");
+$files = json_decode($json);
+if(!isset($files->$file) || !file_exists($files->$file))
   {
-  if (false == file_get_contents($GITORIOUS_PATH))
-    {
-    echo "-1";//The source repository is unavailable, please try again later
-    }
-  else
-    {
-    echo "-2";//Unable to find the source file. Please check if the file exists and try again.
-    }
+  echo "-1";//The source repository is unavailable, please try again later
   exit;
-}
-echo $content;
+  }
+
+echo file_get_contents($files->$file);
 ?>

@@ -38,19 +38,23 @@ if(isset($_POST['check']) && file_exists($TMP_PATH."/doxygen/".$_POST['check']))
   require_once 'library/Git/Exception/InvalidGitRepositoryDirectoryException.php';
   try
     {  
-    $repoMain = new Repository($GIT_PATH_MAIN, true, array('git_executable' => $GIT_EXECUTABLE));
+    $repoMain = new Repository($GIT_PATH_MAIN, false, array('git_executable' => $GIT_EXECUTABLE));
     $repoMain->git("git checkout master");
-    $repoMain->git("git checkout -b EditDoxygen_".substr($_POST['filename'], 3, strlen($_POST['filename']) - 5)."_".time()); 
+    $branch = "EditDoxygen_".substr($_POST['filename'], 3, strlen($_POST['filename']) - 5)."_".time();
+    $repoMain->git("git checkout -b ".$branch); 
     unlink($files->$file);
     $inF = fopen($files->$file,"w");     
     fwrite($inF, substr($_POST['source'], 0, strlen($_POST['source'])-2));
     fclose($inF);
     exec('perl -pi -e \'s/\r\n/\n/\' '.$files->$file);
 
-    file_put_contents($TMP_PATH.'/message.txt', "STYLE: Edit Documentation class: ".substr($_POST['filename'], 3, strlen($_POST['filename']) - 5)."\n\n Author: ".$_POST['email'].'\n'.$_POST['comment']);
+    file_put_contents($TMP_PATH.'/message.txt', "STYLE: Edit Documentation class: ".substr($_POST['filename'], 3, strlen($_POST['filename']) - 5)."\n\n Author: ".$_POST['email']."\n".$_POST['comment']);
     $repoMain->git("git commit -a -F ".$TMP_PATH.'/message.txt'); 
-    $repoMain->git("git gerrit-push");
+    //$repoMain->git("git gerrit-push");
+    file_put_contents($TMP_PATH.'/todo.txt', $branch.';'.$GIT_PATH_MAIN, FILE_APPEND);
     $repoMain->git("git checkout master");
+    echo "<br/>";
+    echo "The change will be posted to gerrit in the next 15 minutes: <a href='http://review.source.kitware.com'>http://review.source.kitware.com</a>";
     }
   catch (InvalidGitRepositoryDirectoryException $exc)
     {
@@ -124,7 +128,7 @@ else if (true || $_POST['s3capcha'] == $_SESSION['s3capcha'] && $_POST['s3capcha
       <textarea id="dataSourceCode" type="hidden" style="display:none;" name="source"><?php echo $_POST['source']?></textarea>
       <textarea id="dataSourceCodeInitial" type="hidden" style="display:none;" name="sourceInitial"><?php echo $_POST['sourceInitial']?></textarea>
         
-      <input style="width:100px;" type="submit" value="Submit to gerrit >>"/>
+      <input style="width:100px;" type="submit" value="Submit to the reviewing process (gerrit) >>"/>
       <br/>	<br/>
     </form>
     <div id ="preview" style="border:1px solid black; width:80%;height: 500px;overflow: scroll;display:none;">

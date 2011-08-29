@@ -15,7 +15,7 @@ require_once 'library/Git/Exception/InvalidGitRepositoryDirectoryException.php';
 
 try
   {  
-  $repoMain = new Repository($GIT_PATH_MAIN, false, array('git_executable' => $GIT_EXECUTABLE));
+  $repoMain = new Repository($GIT_PATH_MAIN, true, array('git_executable' => $GIT_EXECUTABLE));
 
   $repoMain->git("git checkout master"); 
   $repoMain->git("git reset --hard"); 

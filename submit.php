@@ -1,3 +1,4 @@
+<?php include_once 'config.php';?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>
@@ -6,8 +7,7 @@
    Submit Request Error
   </title>
   
-  <?php 
-  include_once 'config.php';?>
+
   <link rel="stylesheet" media="screen" type="text/css" title="Design" href="css/main.css" />
   <link href="<?php echo $DOXYGEN_URL?>/DoxygenStyle.css" rel="stylesheet" type="text/css">
   <script src="js/jquery-1.4.3.min.js" type="text/javascript" charset="utf-8"></script>
@@ -48,7 +48,7 @@ if(isset($_POST['check']) && file_exists($TMP_PATH."/doxygen/".$_POST['check']))
     fclose($inF);
     exec('perl -pi -e \'s/\r\n/\n/\' '.$files->$file);
 
-    file_put_contents($TMP_PATH.'/message.txt', "STYLE: Edit Documentation class: ".substr($_POST['filename'], 3, strlen($_POST['filename']) - 5)."\n\n Author: ".$_POST['email']."\n".$_POST['comment']);
+    file_put_contents($TMP_PATH.'/message.txt', "STYLE: Edit Documentation class: ".substr($_POST['filename'], 3, strlen($_POST['filename']) - 5)."\n\nAuthor: ".$_POST['email']."\n".$_POST['comment']);
     $repoMain->git("git commit -a -F ".$TMP_PATH.'/message.txt'); 
     //$repoMain->git("git gerrit-push");
     file_put_contents($TMP_PATH.'/todo.txt', $branch.';'.$GIT_PATH_MAIN, FILE_APPEND);
@@ -75,7 +75,7 @@ if(isset($_POST['check']) && file_exists($TMP_PATH."/doxygen/".$_POST['check']))
     exit;
     }
   }
-else if (true || $_POST['s3capcha'] == $_SESSION['s3capcha'] && $_POST['s3capcha'] != '')
+else if ($_POST['s3capcha'] == $_SESSION['s3capcha'] && $_POST['s3capcha'] != '')
   {
   unset($_SESSION['s3capcha']);
 
@@ -93,7 +93,11 @@ else if (true || $_POST['s3capcha'] == $_SESSION['s3capcha'] && $_POST['s3capcha
   $path = $TMP_PATH."/doxygen/".$time;
   mkdir($path);
   copy('editcomment.conf.txt', $path.'/editcomment.conf');
-  file_put_contents($path.'/'.$file, $_POST['source']);
+  $inF = fopen($path.'/'.$file,"w");     
+  fwrite($inF, substr($_POST['source'], 0, strlen($_POST['source'])-2));
+  fclose($inF);
+  exec('perl -pi -e \'s/\r\n/\n/\' '.$path.'/'.$file);
+
   $defaultRepertory = getcwd();
   chdir($path);
   exec('doxygen editcomment.conf');
@@ -128,7 +132,7 @@ else if (true || $_POST['s3capcha'] == $_SESSION['s3capcha'] && $_POST['s3capcha
       <textarea id="dataSourceCode" type="hidden" style="display:none;" name="source"><?php echo $_POST['source']?></textarea>
       <textarea id="dataSourceCodeInitial" type="hidden" style="display:none;" name="sourceInitial"><?php echo $_POST['sourceInitial']?></textarea>
         
-      <input style="width:100px;" type="submit" value="Submit to the reviewing process (gerrit) >>"/>
+      <input style="width:300px;" type="submit" value="Submit to the reviewing process (gerrit) >>"/>
       <br/>	<br/>
     </form>
     <div id ="preview" style="border:1px solid black; width:80%;height: 500px;overflow: scroll;display:none;">

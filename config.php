@@ -1,9 +1,8 @@
 <?php
 $LIBRAIRY_NAME="ITK";
-$GITORIOUS_PATH="http://gitorious.org/kitware/itk";
-$DOXYGEN_URL="http://www.itk.org/Doxygen318/html";
-$FOLDERS="Algorithms;BasicFilters;Common;IO;Numerics;Review;SpatialObject";
-$TMP_PATH="/home/charles/ITKTMP";
+$DOXYGEN_URL="http://www.itk.org/Doxygen/html";
+$TMP_PATH="/projects/ITK-commentsedit/ITKTMP";
 $GIT_EXECUTABLE="git";
-$GIT_PATH_MAIN="/home/charles/ITK";
+$GIT_PATH_MAIN="/projects/ITK-commentsedit/ITK";
+
 ?>

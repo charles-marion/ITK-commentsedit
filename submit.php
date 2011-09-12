@@ -1,4 +1,6 @@
-<?php include_once 'config.php';?>
+<?php include_once 'config.php';
+session_start();
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>
@@ -23,11 +25,11 @@
 <?php
 ini_set('display_errors', E_ALL);
 
-//$_POST['source']=stripslashes($_POST['source']);
+$_POST['source']=stripslashes($_POST['source']);
 $json = file_get_contents($TMP_PATH."/tree/tree.txt");
 $files = json_decode($json);
 $file = $_POST['filename'];
-session_start();
+
 if(isset($_POST['check']) && file_exists($TMP_PATH."/doxygen/".$_POST['check']))
   {
   set_time_limit(60*20);
@@ -49,7 +51,7 @@ if(isset($_POST['check']) && file_exists($TMP_PATH."/doxygen/".$_POST['check']))
     exec('perl -pi -e \'s/\r\n/\n/\' '.$files->$file);
 
     file_put_contents($TMP_PATH.'/message.txt', "STYLE: Edit Documentation class: ".substr($_POST['filename'], 3, strlen($_POST['filename']) - 5)."\n\nAuthor: ".$_POST['email']."\n".$_POST['comment']);
-    $repoMain->git("git commit -a -F ".$TMP_PATH.'/message.txt'); 
+    $repoMain->git("git commit -a -F ".$TMP_PATH.'/message.txt 2>&1'); 
     //$repoMain->git("git gerrit-push");
     file_put_contents($TMP_PATH.'/todo.txt', $branch.';'.$GIT_PATH_MAIN, FILE_APPEND);
     $repoMain->git("git checkout master");
